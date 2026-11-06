@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dashboard สาขาจักษุ</title>
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#14284b;--mut:#5b6b8c;--r:#ff3b3b;--o:#ff8a00;--y:#ffd400;--g:#2ecc40;--c:#00c2ff;--b:#3f6bff;--v:#a23bff;--ok:#12b886;--bad:#ff3b5c;
+--rb:linear-gradient(90deg,#ff3b3b,#ff8a00,#ffd400,#2ecc40,#00c2ff,#3f6bff,#a23bff)}
+*{box-sizing:border-box;margin:0}
+body{font-family:'Prompt','Noto Sans Thai',sans-serif;color:var(--ink);padding:18px;min-height:100vh;
+background:radial-gradient(circle at 8% 8%,#ffe9e9,transparent 40%),radial-gradient(circle at 92% 12%,#e6f6ff,transparent 40%),radial-gradient(circle at 50% 100%,#f1e8ff,transparent 45%),#fffdf6}
+.wrap{max-width:1280px;margin:auto}
+header{background:#fff;border-radius:26px;padding:26px 30px 22px;display:flex;gap:20px;align-items:center;justify-content:space-between;flex-wrap:wrap;box-shadow:0 14px 34px #3f6bff2a;position:relative;overflow:hidden}
+header:before{content:"";position:absolute;left:0;right:0;top:0;height:10px;background:var(--rb)}
+header h1{font-size:clamp(24px,3.4vw,38px);font-weight:700;background:var(--rb);-webkit-background-clip:text;background-clip:text;color:transparent;display:inline-block}
+header p{color:var(--mut);margin-top:4px;font-size:15px}
+.art{display:flex;gap:8px}.art svg{width:74px;height:74px;filter:drop-shadow(0 6px 8px #0003)}
+.ctl{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:16px 4px;font-size:14px;color:var(--mut)}
+.pill{display:inline-flex;gap:8px;align-items:center;background:#fff;border-radius:99px;padding:7px 14px;box-shadow:0 3px 10px #14284b14}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--ok);animation:pl 1.6s infinite}
+.dot.off{background:var(--y);animation:none}.dot.err{background:var(--bad);animation:none}
+@keyframes pl{50%{box-shadow:0 0 0 6px #12b88633}}
+button,select{font:inherit;border:0;border-radius:99px;padding:7px 14px;background:linear-gradient(90deg,var(--b),var(--v));color:#fff;cursor:pointer}
+select{background:#fff;color:var(--ink);box-shadow:0 3px 10px #14284b14}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid var(--o)}
+.grid{display:grid;gap:16px}.kpis{grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+.two{grid-template-columns:repeat(auto-fit,minmax(340px,1fr));margin-top:16px}
+.card{background:#fff;border-radius:22px;padding:20px;box-shadow:0 10px 26px #14284b14;position:relative;overflow:hidden}
+.kpi{color:#fff;min-height:190px}
+.kpi h3{font-size:14px;font-weight:500;max-width:68%}
+.kpi .v{font-size:42px;font-weight:700;margin:8px 0 2px}
+.kpi small{display:block;font-size:13px}
+.kpi svg.im{position:absolute;right:10px;top:10px;width:88px;height:88px;filter:drop-shadow(0 8px 8px #0003)}
+.k1{background:linear-gradient(135deg,#ff3b3b,#ff8a00)}.k2{background:linear-gradient(135deg,#ffd400,#ff9f1a);color:#3a2a00}
+.k3{background:linear-gradient(135deg,#2ecc40,#00c2a8)}.k4{background:linear-gradient(135deg,#3f6bff,#a23bff)}
+.chip{display:inline-block;border-radius:99px;padding:2px 12px;font-size:13px;font-weight:600}
+.chip.p{background:#e3fff3;color:#0b8a60}.chip.f{background:#ffe3e8;color:#d6264a}.chip.n{background:#eef1f8;color:var(--mut)}
+.kpi .chip{background:#ffffffee;margin-top:8px}.kpi .chip.p{color:#0b8a60}.kpi .chip.f{color:#d6264a}
+h2{font-size:17px;margin-bottom:12px}
+.hb{display:grid;grid-template-columns:minmax(120px,210px) 1fr 62px;gap:8px;align-items:center;margin:8px 0;font-size:13px}
+.tw{position:relative}.tw .t{background:#eef3fb;border-radius:99px;height:18px;overflow:hidden}
+.tw .t i{display:block;height:100%;border-radius:99px;transition:width .8s}
+.tw u{position:absolute;top:-4px;bottom:-4px;width:0;border-left:3px dashed #14284b;text-decoration:none}
+.hb b{text-align:right}
+.donutrow{display:flex;gap:20px;align-items:center;flex-wrap:wrap;justify-content:center}
+.lg div{display:flex;gap:8px;align-items:center;margin:6px 0;font-size:14px}.lg i{width:14px;height:14px;border-radius:5px}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+.orig th,.orig td{border:1px solid #c9d3e6;padding:8px 10px}
+.orig th{text-align:center;color:#fff;text-shadow:0 1px 2px #0004}
+.orig td.n{text-align:right;font-variant-numeric:tabular-nums}.orig td.c{text-align:center}.orig td.err{color:#d6264a;text-align:right}
+.orig tr.tot td{background:#fff6c7;font-weight:700}
+.orig tbody tr:nth-child(odd) td{background:#fbfcff}.orig tbody tr.tot td{background:#fff6c7}
+.opts{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.opts input{font:inherit;padding:8px 14px;border-radius:99px;border:2px solid #dfe7f6;flex:1 1 220px}
+.opts label{font-size:13px;color:var(--mut)}.opts select{margin-left:6px}
+.sc{overflow-x:auto}
+.ytb th{background:var(--b)}.ytb td{text-align:center;font-weight:700;font-size:16px}
+footer{margin:22px 4px;font-size:12.5px;color:var(--mut)}
+@media(prefers-reduced-motion:reduce){.dot,.tw .t i{animation:none;transition:none}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<radialGradient id="gs" cx=".4" cy=".35" r=".8"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#cfe0ee"/></radialGradient>
+<radialGradient id="gi" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#0b3d66"/><stop offset=".55" stop-color="#2d9cdb"/><stop offset=".9" stop-color="#0d5a8f"/><stop offset="1" stop-color="#06263f"/></radialGradient>
+<radialGradient id="gb" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#3a2410"/><stop offset=".6" stop-color="#8a5a2b"/><stop offset="1" stop-color="#3b2410"/></radialGradient>
+<radialGradient id="gc" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#f4f6f8" stop-opacity=".98"/><stop offset=".7" stop-color="#cfd6dc" stop-opacity=".92"/><stop offset="1" stop-color="#9aa6af" stop-opacity=".6"/></radialGradient>
+<linearGradient id="gl" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#bfe9ff" stop-opacity=".9"/><stop offset="1" stop-color="#7a4dff" stop-opacity=".45"/></linearGradient>
+<linearGradient id="gf" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ff3b3b"/><stop offset=".5" stop-color="#ffd400"/><stop offset="1" stop-color="#3f6bff"/></linearGradient>
+<symbol id="eye" viewBox="0 0 120 120"><path d="M6 60 C28 22 92 22 114 60 C92 98 28 98 6 60Z" fill="url(#gs)" stroke="#e7a9a0" stroke-width="3"/><circle cx="60" cy="60" r="27" fill="url(#gi)"/><circle cx="60" cy="60" r="12" fill="#030a12"/><circle cx="50" cy="49" r="7" fill="#fff" opacity=".9"/><circle cx="70" cy="70" r="3" fill="#fff" opacity=".6"/></symbol>
+<symbol id="cat" viewBox="0 0 120 120"><path d="M6 60 C28 22 92 22 114 60 C92 98 28 98 6 60Z" fill="url(#gs)" stroke="#e7a9a0" stroke-width="3"/><circle cx="60" cy="60" r="27" fill="url(#gb)"/><circle cx="60" cy="60" r="17" fill="url(#gc)"/><circle cx="52" cy="52" r="6" fill="#fff" opacity=".85"/></symbol>
+<symbol id="glasses" viewBox="0 0 120 120"><circle cx="34" cy="62" r="24" fill="url(#gl)" stroke="url(#gf)" stroke-width="7"/><circle cx="86" cy="62" r="24" fill="url(#gl)" stroke="url(#gf)" stroke-width="7"/><path d="M58 58 C60 52 60 52 62 58" stroke="#a23bff" stroke-width="6" fill="none" stroke-linecap="round"/><path d="M10 58 L2 44M110 58 L118 44" stroke="#3f6bff" stroke-width="6" stroke-linecap="round"/><path d="M20 52 C24 46 30 44 36 46" stroke="#fff" stroke-width="4" stroke-linecap="round" fill="none" opacity=".8"/></symbol>
+</defs></svg>
+<div class="wrap">
+<header>
+ <div><h1>Dashboard สาขาจักษุ</h1><p id="sub">เขตสุขภาพที่ 5 · กำลังโหลดข้อมูล…</p></div>
+ <div class="art"><svg><use href="#eye"/></svg><svg><use href="#cat"/></svg><svg><use href="#glasses"/></svg></div>
+</header>
+<div class="ctl">
+ <span class="pill"><span class="dot off" id="dot"></span><span id="stat">เชื่อมต่อ Google Sheet…</span></span>
+ <span class="pill">รีเฟรชถัดไปใน <b id="cd">–</b> วินาที</span>
+ <label class="pill">ดึงซ้ำทุก <select id="iv"><option value="30">30 วินาที</option><option value="45" selected>45 วินาที</option><option value="60">60 วินาที</option></select></label>
+ <button id="rf">ดึงข้อมูลตอนนี้</button>
+</div>
+<section class="grid kpis" id="kpis"></section>
+<section class="grid two">
+ <div class="card"><h2>แนวโน้มรายปี: ร้อยละผู้ป่วยต้อกระจกชนิดบอดได้รับการผ่าตัดภายใน 30 วัน</h2><div id="trend"></div></div>
+ <div class="card"><h2>สถานะรายหน่วยบริการ</h2><div class="donutrow" id="donut"></div></div>
+</section>
+<section class="card" style="margin-top:16px"><h2>ผลงานรายโรงพยาบาล (เส้นประ = เกณฑ์)</h2><div id="bars"></div></section>
+<section class="card" style="margin-top:16px">
+ <h2>ผลการดำเนินงานรายหน่วยบริการ</h2>
+ <div class="sc" style="margin-bottom:14px"><table class="orig ytb" id="yt"></table></div>
+ <div class="opts"><input id="q" placeholder="ค้นหาชื่อโรงพยาบาล…" aria-label="ค้นหาโรงพยาบาล">
+  <label>สถานะ<select id="fp"><option value="">ทั้งหมด</option><option value="ผ่าน">ผ่าน</option><option value="ไม่ผ่าน">ไม่ผ่าน</option><option value="nd">ไม่มีข้อมูล (#DIV/0!)</option><option value="has">เฉพาะที่มีข้อมูล</option></select></label>
+  <label>เรียงลำดับ<select id="fo"><option value="no">ตามลำดับเดิม</option><option value="rd">ผลงาน มาก→น้อย</option><option value="ra">ผลงาน น้อย→มาก</option><option value="b">จำนวนวินิจฉัย (B) มาก→น้อย</option><option value="name">ชื่อ ก→ฮ</option></select></label>
+  <button id="fr" type="button">ล้างตัวเลือก</button></div>
+ <div class="sc"><table id="tb" class="orig"></table></div>
+ <p id="tnote" style="font-size:13px;color:var(--mut);margin-top:8px"></p>
+</section>
+<footer>แหล่งข้อมูล: Google Sheet “สาขาตา/จักษุ” (อ่านอัตโนมัติ แก้ไขในชีตแล้วหน้านี้อัปเดตเองตามรอบ) · ต้องตั้งค่าการแชร์ชีตเป็น “ทุกคนที่มีลิงก์ ดูได้” · ควรตรวจสอบกับต้นฉบับก่อนเผยแพร่</footer>
+</div>
+<script>
+/* ===== ตั้งค่า ===== */
+const CFG={SHEET_ID:'1a8SsvZQKnSeQ4DmJTD1QSt91Wqf6ct152zGDIpsid84',SHEET_NAME:'ชีต1',GID:'0',TARGET:85};
+const RB=['#ff3b3b','#ff8a00','#ffd400','#2ecc40','#00c2ff','#3f6bff','#a23bff'];
+/* ข้อมูลสำรอง ณ 19 ต.ค. 2569 (ใช้เมื่อเชื่อมต่อชีตไม่ได้) */
+const FB={date:'ข้อมูล ณ วันที่ 19 ตุลาคม พ.ศ. 2569',target:85,years:[97.2,97.5,99,92.67],total:{a:3182,b:3704,r:92.67,p:'ผ่าน'},
+hosp:[['พหลพลพยุหเสนา',2448,2718,90.07,'ผ่าน'],['มะการักษ์',840,840,100,'ผ่าน'],['ทองผาภูมิ',158,158,100,'ผ่าน'],['สมเด็จพระสังฆราชองค์ที่ 19',252,252,100,'ผ่าน'],['บ่อพลอย',0,0,NaN,''],['สังขละบุรี',0,0,NaN,''],['เจ้าคุณไพบูลย์พนมทวน',136,136,100,'ผ่าน'],['ด่านมะขามเตี้ย',0,0,NaN,''],['ท่ากระดาน',0,0,NaN,''],['ไทรโยค',0,0,NaN,''],['เลาขวัญ',139,146,95.21,'ผ่าน'],['พยาบาลสถานพระบารมี',0,0,NaN,''],['สมเด็จพระปิยมหาราชรมณียเขต',0,0,NaN,''],['ห้วยกระเจาเฉลิมพระเกียรติ 80 พรรษา',59,101,58.42,'ไม่ผ่าน'],['ศุกร์ศิริศรีสวัสดิ์',0,0,NaN,''],['หนองปรือ',0,0,NaN,'']].map((h,i)=>({no:i+1,name:'รพ.'+h[0],a:h[1],b:h[2],r:h[3],p:h[4]}))};
+let D=FB,live=false,lastOk=null,busy=false,left=45;
+const $=id=>document.getElementById(id);
+const num=s=>{if(s==null)return NaN;s=String(s).replace(/[,%\s]/g,'');return s===''||isNaN(+s)?NaN:+s};
+const f=(v,d=2)=>Number.isFinite(v)?v.toLocaleString('th-TH',{minimumFractionDigits:d,maximumFractionDigits:d}):'–';
+const f0=v=>f(v,0),esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const isP=x=>x==='ผ่าน'||x==='ไม่ผ่าน';
+const st=x=>x.p==='ผ่าน'?'ผ่าน':x.p==='ไม่ผ่าน'?'ไม่ผ่าน':'nd';
+function csv(t){const R=[];let r=[],c='',q=false;for(let i=0;i<t.length;i++){const ch=t[i];
+ if(q){if(ch=='"'){if(t[i+1]=='"'){c+='"';i++}else q=false}else c+=ch}
+ else if(ch=='"')q=true;else if(ch==','){r.push(c);c=''}else if(ch=='\n'||ch=='\r'){if(ch=='\r'&&t[i+1]=='\n')i++;r.push(c);R.push(r);r=[];c=''}else c+=ch}
+ if(c||r.length){r.push(c);R.push(r)}return R}
+function parse(rows){const d={date:'',target:CFG.TARGET,years:[NaN,NaN,NaN,NaN],hosp:[],total:null};
+ for(const r of rows){const c=r.map(x=>(x||'').trim()),nz=c.filter(Boolean);if(!nz.length)continue;const first=nz[0];
+  if(!d.date){const m=nz.find(x=>x.includes('ข้อมูล ณ วันที่')&&x.includes('พ.ศ.'));if(m)d.date=m}
+  if(first.startsWith('ตัวชี้วัด')){d.years=nz.slice(-4).map(num);const t=nz.join(' ').match(/≥\s*ร้อยละ\s*(\d+(?:\.\d+)?)/);if(t)d.target=+t[1]}
+  const ni=c.findIndex(x=>/^รพ\./.test(x)),ti=c.findIndex(x=>x.startsWith('รวมทั้งสิ้น'));
+  if(ni>=0||ti>=0){const i=ni>=0?ni:ti,v=c.slice(i+1).filter(Boolean),o={a:num(v[0]),b:num(v[1]),r:num(v[2]),p:isP(v[3])?v[3]:(isP(v[2])?v[2]:'')};
+   if(ti>=0)d.total=o;else d.hosp.push({no:c[ni-1]||d.hosp.length+1,name:c[ni],...o})}}
+ if(!d.hosp.length)throw new Error('ไม่พบข้อมูลโรงพยาบาลในชีต');return d}
+function jsonp(url){return new Promise((ok,no)=>{const n='g'+Date.now(),s=document.createElement('script');
+ window[n]=j=>{delete window[n];s.remove();ok(j)};s.onerror=()=>{s.remove();no(new Error('JSONP ล้มเหลว'))};s.src=url+'&tqx=responseHandler:'+n;document.head.appendChild(s)})}
+async function load(){
+ const id=CFG.SHEET_ID,sh='sheet='+encodeURIComponent(CFG.SHEET_NAME),ts='&_='+Date.now(),base=`https://docs.google.com/spreadsheets/d/${id}/gviz/tq`;
+ const tries=[
+  async()=>{const r=await fetch(`https://docs.google.com/spreadsheets/d/${id}/export?format=csv&gid=${CFG.GID}${ts}`,{cache:'no-store'});if(!r.ok)throw 0;return parse(csv(await r.text()))},
+  async()=>{const r=await fetch(`${base}?tqx=out:csv&headers=0&${sh}${ts}`,{cache:'no-store'});if(!r.ok)throw 0;return parse(csv(await r.text()))},
+  async()=>{const j=await jsonp(`${base}?headers=0&${sh}${ts}`);return parse(j.table.rows.map(r=>(r.c||[]).map(x=>x?String(x.f??x.v??''):'')))}];
+ let err;for(const t of tries){try{return await t()}catch(e){err=e}}throw err||new Error('โหลดไม่ได้')}
+async function refresh(){if(busy)return;busy=true;$('dot').className='dot off';$('stat').textContent='กำลังดึงข้อมูล…';
+ try{D=await load();live=true;lastOk=new Date();$('dot').className='dot';$('stat').textContent='เชื่อมต่อสด · อัปเดต '+lastOk.toLocaleTimeString('th-TH')}
+ catch(e){live=false;$('dot').className='dot err';$('stat').textContent='เชื่อมต่อไม่ได้'+(lastOk?' · แสดงข้อมูลล่าสุด '+lastOk.toLocaleTimeString('th-TH'):' · แสดงข้อมูลสำรอง ณ 19 ต.ค. 2569')}
+ busy=false;left=+$('iv').value;render()}
+const chip=p=>p?`<span class="chip ${p==='ผ่าน'?'p':'f'}">${esc(p)}</span>`:'';
+function render(){const h=D.hosp,T=D.total||{},tg=D.target;
+ $('sub').textContent='เขตสุขภาพที่ 5 · '+(D.date||'')+(live?'':' (ข้อมูลสำรอง)');
+ const sa=h.reduce((s,x)=>s+(x.a||0),0),sb=h.reduce((s,x)=>s+(x.b||0),0);
+ const tot=Number.isFinite(T.r)?T.r:sa/sb*100,prev=D.years[2],dl=Number.isFinite(prev)?tot-prev:NaN;
+ const withD=h.filter(x=>x.b>0),pass=h.filter(x=>x.p==='ผ่าน').length,fail=h.filter(x=>x.p==='ไม่ผ่าน').length,nd=h.length-pass-fail;
+ $('kpis').innerHTML=`
+ <div class="card kpi k1"><svg class="im"><use href="#cat"/></svg><h3>ร้อยละผู้ป่วยต้อกระจกชนิดบอด (Blinding Cataract) ได้รับการผ่าตัดภายใน 30 วัน</h3><div class="v">${f(tot)}%</div><small>เกณฑ์ ≥ ร้อยละ ${f0(tg)} · เทียบปี 2568: ${Number.isFinite(dl)?(dl>0?'+':'')+f(dl)+' จุด':'–'}</small>${chip(T.p||(tot>=tg?'ผ่าน':'ไม่ผ่าน'))}</div>
+ <div class="card kpi k2"><svg class="im"><use href="#eye"/></svg><h3>ผู้ป่วยที่ได้รับการผ่าตัดภายใน 30 วัน (A)</h3><div class="v">${f0(sa)}</div><small>ราย รวมทุกโรงพยาบาลที่รายงาน</small><small>จากผู้ได้รับการวินิจฉัย ${f0(sb)} ราย (B)</small></div>
+ <div class="card kpi k3"><svg class="im"><use href="#glasses"/></svg><h3>โรงพยาบาลที่ผ่านเกณฑ์</h3><div class="v">${pass}<span style="font-size:20px"> / ${withD.length}</span></div><small>แห่งที่มีผู้ป่วยต้อกระจกชนิดบอด</small><small>ร้อยละ ${f(withD.length?pass/withD.length*100:NaN,1)} ของแห่งที่มีข้อมูล</small></div>
+ <div class="card kpi k4"><svg class="im"><use href="#cat"/></svg><h3>โรงพยาบาลที่ต้องเร่งพัฒนา / ยังไม่มีข้อมูล</h3><div class="v">${fail}<span style="font-size:20px"> / ${nd}</span></div><small>ไม่ผ่านเกณฑ์ ${fail} แห่ง</small><small>ไม่มีข้อมูล (#DIV/0!) ${nd} แห่ง</small></div>`;
+ /* trend */
+ const v=D.years,yrs=['2566','2567','2568','2569'],ty=190-tg/100*160;
+ $('trend').innerHTML=`<svg viewBox="0 0 440 240" width="100%" role="img" aria-label="แนวโน้มรายปี">`+
+  yrs.map((y,i)=>{const x=30+i*100,hh=Number.isFinite(v[i])?v[i]/100*160:0;return `<rect x="${x}" y="${190-hh}" width="70" height="${hh}" rx="12" fill="${RB[[0,2,3,5][i]]}"/><rect x="${x+8}" y="${194-hh}" width="10" height="${Math.max(hh-10,0)}" rx="5" fill="#fff" opacity=".35"/><text x="${x+35}" y="${182-hh}" text-anchor="middle" font-size="15" font-weight="700" fill="#14284b">${f(v[i])}</text><text x="${x+35}" y="214" text-anchor="middle" font-size="13" fill="#5b6b8c">พ.ศ. ${y}</text>`}).join('')+
+  `<line x1="14" x2="430" y1="${ty}" y2="${ty}" stroke="#14284b" stroke-width="2" stroke-dasharray="6 5"/><text x="428" y="${ty-5}" text-anchor="end" font-size="12" fill="#14284b">เกณฑ์ ${f0(tg)}</text></svg>`;
+ /* donut */
+ const C=2*Math.PI*52,seg=[[pass,'#2ecc40','ผ่านเกณฑ์'],[fail,'#ff3b5c','ไม่ผ่านเกณฑ์'],[nd,'#b9c4d8','ไม่มีข้อมูล']];let off=0;
+ const arcs=seg.map(([n,c])=>{const l=n/h.length*C,e=`<circle cx="70" cy="70" r="52" fill="none" stroke="${c}" stroke-width="22" stroke-dasharray="${l} ${C-l}" stroke-dashoffset="${-off}" transform="rotate(-90 70 70)"/>`;off+=l;return e}).join('');
+ $('donut').innerHTML=`<svg viewBox="0 0 140 140" width="200" height="200">${arcs}<text x="70" y="68" text-anchor="middle" font-size="24" font-weight="700" fill="#14284b">${h.length}</text><text x="70" y="86" text-anchor="middle" font-size="11" fill="#5b6b8c">หน่วยบริการ</text></svg><div class="lg">${seg.map(([n,c,t])=>`<div><i style="background:${c}"></i>${t} ${n} แห่ง</div>`).join('')}</div>`;
+ /* bars */
+ const s=[...withD].sort((a,b)=>b.r-a.r);
+ $('bars').innerHTML=s.map((x,i)=>`<div class="hb"><span>${esc(x.name)}</span><span class="tw"><span class="t"><i style="width:${Math.min(x.r,100)}%;background:linear-gradient(90deg,${RB[i%7]},${RB[(i+1)%7]})"></i></span><u style="left:${tg}%"></u></span><b>${f(x.r)}%</b></div>`).join('')+`<div style="font-size:12px;color:#5b6b8c;margin-top:8px">แสดงเฉพาะโรงพยาบาลที่มีผู้ป่วย (${s.length} แห่ง) · เส้นประ = เกณฑ์ ≥ ${f0(tg)}%</div>`;
+ /* year table */
+ $('yt').innerHTML=`<tr><th>รายละเอียดตัวชี้วัด</th><th>เกณฑ์</th>${yrs.map((y,i)=>`<th style="background:${RB[[0,2,3,5][i]]}">พ.ศ. ${y}</th>`).join('')}</tr><tr><td style="text-align:left;font-weight:500;font-size:13.5px">ร้อยละผู้ป่วยต้อกระจกชนิดบอด (Blinding Cataract) ได้รับการผ่าตัดภายใน 30 วัน</td><td>≥ ร้อยละ ${f0(tg)}</td>${v.map(x=>`<td>${f(x)}</td>`).join('')}</tr>`;
+ drawTable()}
+function drawTable(){const k=$('q').value.trim(),fp=$('fp').value,fo=$('fo').value,T=D.total;
+ let L=D.hosp.filter(x=>(!k||x.name.includes(k))&&(!fp||(fp==='has'?x.b>0:st(x)===fp)));
+ const R=x=>Number.isFinite(x.r)?x.r:-1;
+ if(fo==='rd')L=[...L].sort((a,b)=>R(b)-R(a));else if(fo==='ra')L=[...L].sort((a,b)=>R(a)-R(b));else if(fo==='b')L=[...L].sort((a,b)=>(b.b||0)-(a.b||0));else if(fo==='name')L=[...L].sort((a,b)=>a.name.localeCompare(b.name,'th'));
+ const row=(x,t)=>`<tr${t?' class="tot"':''}><td class="c">${t?'':esc(x.no)}</td><td>${t?'รวมทั้งสิ้น':esc(x.name)}</td><td class="n">${Number.isFinite(x.a)?f0(x.a):''}</td><td class="n">${Number.isFinite(x.b)?f0(x.b):''}</td>${Number.isFinite(x.r)?`<td class="n">${f(x.r)}</td>`:(Number.isFinite(x.a)?'<td class="err">#DIV/0!</td>':'<td></td>')}<td class="c">${chip(x.p)}</td></tr>`;
+ const H=['ลำดับ','หน่วยบริการ','A = ผู้ป่วยต้อกระจกชนิดบอดที่ได้รับการผ่าตัดภายใน 30 วัน','B = ผู้ป่วยต้อกระจกชนิดบอดที่ได้รับการวินิจฉัย','ผลงาน','ผ่าน/ไม่ผ่าน'];
+ $('tb').innerHTML=`<thead><tr>${H.map((x,i)=>`<th style="background:${RB[[0,1,3,4,5,6][i]]}">${x}</th>`).join('')}</tr></thead><tbody>`+L.map(x=>row(x,0)).join('')+(T&&!k&&!fp?row(T,1):'')+(L.length?'':'<tr><td colspan="6" class="c">ไม่พบข้อมูลตามตัวเลือกที่เลือก</td></tr>')+'</tbody>';
+ $('tnote').innerHTML='แสดง '+L.length+' จาก '+D.hosp.length+' หน่วยบริการ · เกณฑ์ผ่าน ≥ ร้อยละ '+f0(D.target)+'<br>'+esc(D.date||'')}
+['q','fp','fo'].forEach(i=>$(i).addEventListener(i==='q'?'input':'change',drawTable));
+$('fr').onclick=()=>{$('q').value='';$('fp').value='';$('fo').value='no';drawTable()};
+$('rf').onclick=refresh;$('iv').onchange=()=>{left=+$('iv').value};
+setInterval(()=>{if(document.hidden)return;left--;$('cd').textContent=Math.max(left,0);if(left<=0)refresh()},1000);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&lastOk&&(Date.now()-lastOk)>+$('iv').value*1000)refresh()});
+render();refresh();
+</script>
+</body>
+</html>
